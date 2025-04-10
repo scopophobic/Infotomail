@@ -23,7 +23,8 @@ receiver_email = "sudhanshu.sharma.work.22@gmail.com"
 smtp_server = "smtp.gmail.com"
 smtp_port = "465"
 smtp_username = "gunner382269@gmail.com"
-smtp_password = "ohqv sspq dnxg maqs"
+# smtp_password = "ohqv sspq dnxg maqs"
+smtp_password = os.getenv("SMTP_PASSWORD")
 
 
 @app.get("/")
