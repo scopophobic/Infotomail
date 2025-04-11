@@ -18,12 +18,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-sender_email = "gunner382269@gmail.com"
-receiver_email = "sudhanshu.sharma.work.22@gmail.com"
+sender_email = ""
+receiver_email = ""
 smtp_server = "smtp.gmail.com"
 smtp_port = "465"
-smtp_username = "gunner382269@gmail.com"
-# smtp_password = "ohqv sspq dnxg maqs"
+smtp_username = ""
 smtp_password = os.getenv("SMTP_PASSWORD")
 
 
