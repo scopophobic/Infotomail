@@ -56,10 +56,11 @@ def send_email(subject: str, body: str):
     msg["To"] = receiver_email
 
     try:
-        with smtplib.SMTP_SSL(smtp_server, smtp_port) as server:
-            server.starttls()
+        with smtplib.SMTP(smtp_server, 587) as server:
+            server.set_debuglevel(1) 
+            server.starttls()     
             server.login(smtp_username, smtp_password)
             server.send_message(msg)
         print("✅ Email sent")
     except Exception as e:
-        print("❌ Email failed to send:", e)
+        print(f"❌ Email failed to send: {e}")
