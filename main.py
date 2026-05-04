@@ -22,7 +22,7 @@ sender_email = "gunner382269@gmail.com"
 receiver_email = "sudhanshu.sharma.work.22@gmail.com"
 smtp_server = "smtp.gmail.com"
 smtp_port = "465"
-smtp_username = ""
+smtp_username = "gunner382269@gmail.com"
 smtp_password = os.getenv("SMTP_PASSWORD")
 
 
