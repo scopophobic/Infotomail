@@ -1,7 +1,6 @@
 from fastapi import FastAPI, Form
 from fastapi.middleware.cors import CORSMiddleware
-from email.mime.text import MIMEText
-import smtplib
+import resend  
 from dotenv import load_dotenv
 import os
 
@@ -9,26 +8,22 @@ load_dotenv()
 
 app = FastAPI()
 
-# CORS setup (allow frontend to call)
+# CORS setup
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Use your frontend URL here in production
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-sender_email = "gunner382269@gmail.com"
+# Initialize Resend
+resend.api_key = os.getenv("RESEND_API_KEY") # Add this key to Render's Env Vars
 receiver_email = "sudhanshu.sharma.work.22@gmail.com"
-smtp_server = "smtp.gmail.com"
-smtp_port = "443"
-smtp_username = "gunner382269@gmail.com"
-smtp_password = os.getenv("SMTP_PASSWORD")
-
 
 @app.get("/")
 def read_root():
-    return {"message": "EMAIL SENDER"}
+    return {"message": "EMAIL SENDER ACTIVE"}
 
 @app.post("/submit")
 def submit_form(
@@ -37,30 +32,36 @@ def submit_form(
     message: str = Form(...)
 ):
     subject = f"New Contact Form Submission from {name}"
-    body = f"""
-    Name: {name}
-    Email: {email}
     
-    Message:
-    {message}
+    # Resend handles HTML beautifully
+    body_html = f"""
+    <h3>New Message from your Website</h3>
+    <p><strong>Name:</strong> {name}</p>
+    <p><strong>Email:</strong> {email}</p>
+    <p><strong>Message:</strong></p>
+    <p style="background: #f4f4f4; padding: 10px; border-radius: 5px;">{message}</p>
     """
 
-    send_email(subject, body)
-    return {"message": "Form submitted successfully"}
+    success = send_email_via_resend(subject, body_html)
+    
+    if success:
+        return {"message": "Form submitted successfully"}
+    else:
+        return {"message": "Failed to send email"}, 500
 
-def send_email(subject: str, body: str):
-
-    msg = MIMEText(body)
-    msg["Subject"] = subject
-    msg["From"] = sender_email
-    msg["To"] = receiver_email
-
+def send_email_via_resend(subject: str, html_content: str):
     try:
-        with smtplib.SMTP(smtp_server, 587) as server:
-            server.set_debuglevel(1) 
-            server.starttls()     
-            server.login(smtp_username, smtp_password)
-            server.send_message(msg)
-        print("✅ Email sent")
+        # On the free tier, you MUST use this sender address
+        params = {
+            "from": "onboarding@resend.dev",
+            "to": receiver_email,
+            "subject": subject,
+            "html": html_content,
+        }
+        
+        resend.Emails.send(params)
+        print("✅ Email sent via Resend API")
+        return True
     except Exception as e:
-        print(f"❌ Email failed to send: {e}")
+        print(f"❌ Resend API Error: {e}")
+        return False
