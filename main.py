@@ -57,6 +57,7 @@ def send_email(subject: str, body: str):
 
     try:
         with smtplib.SMTP_SSL(smtp_server, smtp_port) as server:
+            server.starttls()
             server.login(smtp_username, smtp_password)
             server.send_message(msg)
         print("✅ Email sent")
