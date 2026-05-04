@@ -18,8 +18,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-sender_email = ""
-receiver_email = ""
+sender_email = "gunner382269@gmail.com"
+receiver_email = "wheelermovers4@gmail.com"
 smtp_server = "smtp.gmail.com"
 smtp_port = "465"
 smtp_username = ""
