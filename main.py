@@ -21,7 +21,7 @@ app.add_middleware(
 sender_email = "gunner382269@gmail.com"
 receiver_email = "sudhanshu.sharma.work.22@gmail.com"
 smtp_server = "smtp.gmail.com"
-smtp_port = "443"
+smtp_port = "587"
 smtp_username = "gunner382269@gmail.com"
 smtp_password = os.getenv("SMTP_PASSWORD")
 
